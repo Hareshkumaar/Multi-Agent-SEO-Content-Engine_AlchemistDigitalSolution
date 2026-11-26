@@ -146,4 +146,8 @@ details > summary { cursor: pointer; font-weight: 800; list-style: none; }
 .notif-menu { position: absolute; right: 0; top: 52px; width: 320px; max-height: 360px; overflow: auto; z-index: 20; padding: 14px; border: 1px solid var(--inner2); box-shadow: 0 16px 40px rgba(0, 0, 0, .45); }
 .notif-menu[hidden] { display: none; }
 .notif-menu .item:hover { background: var(--inner2); }
+.pill[hidden] { display: none; }
+dialog.modal { border: 1px solid var(--inner2); color: var(--white); max-width: 420px; width: calc(100% - 32px); padding: 20px; box-shadow: 0 24px 60px rgba(0, 0, 0, .6); }
+dialog.modal::backdrop { background: rgba(0, 0, 0, .65); backdrop-filter: blur(4px); }
+dialog.modal .btn { padding: 8px 18px; }
 @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } }

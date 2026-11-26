@@ -4,6 +4,7 @@ import json
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel
 
 from app.db.repositories.agent_runs import agent_runs
@@ -12,6 +13,7 @@ from app.llm.validated import call_validated
 
 PROMPTS = Path(__file__).parent / "prompts"
 SYSTEM = "You are one specialised agent inside a content pipeline. Output ONLY valid JSON."
+PROMPT = ChatPromptTemplate.from_messages([("system", SYSTEM), ("human", "{body}")])
 
 
 def render(template: str, **values) -> str:
@@ -46,7 +48,8 @@ class BaseAgent:
         return render(text, **self.variables(state)) + "\n\nReturn ONLY JSON matching this JSON schema:\n" + schema
 
     def run(self, state: dict) -> dict:
-        obj, usage = call_validated(SYSTEM, self.prompt(state), self.schema)
+        sys_msg, user_msg = PROMPT.format_messages(body=self.prompt(state))
+        obj, usage = call_validated(sys_msg.content, user_msg.content, self.schema)
         is_rerun = bool(state.get("feedback"))   # Critic feedback exists only after the first audit
         label = self.rerun_name if (is_rerun and self.rerun_name) else self.name
         fb, fields = self.log_feedback(obj, state), self.db_update(obj, state)

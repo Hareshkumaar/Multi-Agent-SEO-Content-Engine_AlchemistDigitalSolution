@@ -2,7 +2,7 @@
 
 Four specialised AI agents research, outline, write and critique an article. A Critic score below 80 sends the draft back to the Writer once. A human editor approves and exports.
 
-**Live app:** `ADD_YOUR_VERCEL_URL_HERE` (first load after idle can be slow because of a cold start)
+**Live app:** https://multi-agent-seo-content-engine-alch.vercel.app (first load after idle can be slow because of a cold start)
 
 ## Architecture
 

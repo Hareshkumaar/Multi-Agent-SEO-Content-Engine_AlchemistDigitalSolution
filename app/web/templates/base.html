@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Manrope:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css?v=9">
+  <link rel="stylesheet" href="/css/tokens.css?v=10">
 </head>
 <body>
 <div class="shell">
@@ -44,6 +44,17 @@
   </main>
 </div>
 <div class="toast" id="toast" hidden role="status"></div>
+<dialog class="modal card" id="confirm-dialog" aria-labelledby="confirm-title">
+  <div class="stack">
+    <span class="pill pill--yellow" id="confirm-badge" hidden></span>
+    <h2 class="card__title" id="confirm-title" style="margin:0">Approve article?</h2>
+    <p class="sub" id="confirm-msg"></p>
+    <div class="row" style="justify-content:flex-end;margin-top:6px">
+      <button type="button" class="btn btn--dark btn--sm" id="confirm-cancel">Cancel</button>
+      <button type="button" class="btn btn--sm" id="confirm-ok">Approve</button>
+    </div>
+  </div>
+</dialog>
 <script src="/js/api.js?v=4"></script>
 {% block scripts %}{% endblock %}
 </body>

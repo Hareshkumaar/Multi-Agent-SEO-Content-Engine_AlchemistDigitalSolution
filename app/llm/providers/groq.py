@@ -1,23 +1,26 @@
-from app.core.config import Settings
-from app.core.constants import LLM_MAX_TOKENS, REASONING_EFFORT
-from app.llm.providers import http_client
+from functools import lru_cache
 
-URL = "https://api.groq.com/openai/v1/chat/completions"
+from app.core.config import Settings
+from app.core.constants import HTTP_TIMEOUT, LLM_MAX_TOKENS, REASONING_EFFORT
+from app.llm.providers import http_client, invoke_chat
+
+
+@lru_cache(maxsize=4)
+def _chat_model(api_key: str, model: str):
+    from langchain_groq import ChatGroq
+
+    return ChatGroq(
+        model=model,
+        api_key=api_key,
+        temperature=0.4,
+        max_tokens=LLM_MAX_TOKENS,
+        request_timeout=HTTP_TIMEOUT,
+        max_retries=0,
+        http_client=http_client,
+        reasoning_effort=REASONING_EFFORT if "gpt-oss" in model else None,
+        model_kwargs={"response_format": {"type": "json_object"}},
+    )
 
 
 def complete(system: str, user: str, s: Settings) -> tuple[str, int, int]:
-    r = http_client.post(
-        URL,
-        headers={"Authorization": f"Bearer {s.groq_api_key}"},
-        json={
-            "model": s.groq_model,
-            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-            "response_format": {"type": "json_object"},
-            "max_tokens": LLM_MAX_TOKENS,
-            "temperature": 0.4,
-            **({"reasoning_effort": REASONING_EFFORT} if "gpt-oss" in s.groq_model else {}),
-        },
-    )
-    r.raise_for_status()
-    d = r.json()
-    return d["choices"][0]["message"]["content"], d["usage"]["prompt_tokens"], d["usage"]["completion_tokens"]
+    return invoke_chat(_chat_model(s.groq_api_key, s.groq_model), system, user)

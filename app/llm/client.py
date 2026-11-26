@@ -21,18 +21,32 @@ class LLMResult:
     latency_ms: int
 
 
+def _status_info(e: Exception) -> tuple[int, dict, str] | None:
+    """Extract (status_code, headers, detail) from httpx, Groq, or Google GenAI HTTP errors."""
+    resp = getattr(e, "response", None)
+    code = getattr(e, "code", None) or getattr(e, "status_code", None) or (getattr(resp, "status_code", None) if resp is not None else None)
+    if code is None:
+        return None
+    headers = getattr(resp, "headers", None) or {}
+    text = getattr(resp, "text", None) or str(e)
+    return int(code), headers, text[:300]
+
+
 def _try(name: str, system: str, user: str, settings, attempts: int):
     """Call one provider. Waits as long as it asks on 429 or 5xx, up to `attempts` tries."""
     for attempt in range(attempts):
         try:
             return PROVIDERS[name](system, user, settings)
-        except httpx.TimeoutException as e:
-            raise LLMError(f"{name} timed out") from e
-        except httpx.HTTPStatusError as e:
-            code = e.response.status_code
+        except Exception as e:
+            if isinstance(e, (httpx.TimeoutException, TimeoutError)) or type(e).__name__ == "APITimeoutError":
+                raise LLMError(f"{name} timed out") from e
+            info = _status_info(e)
+            if not info:
+                raise
+            code, headers, detail = info
             if code not in RETRY_STATUS or attempt == attempts - 1:
-                raise LLMError(f"{name} error {code}: {e.response.text[:300]}") from e
-            wait = float(e.response.headers.get("retry-after", HTTP_BACKOFF * 2**attempt))
+                raise LLMError(f"{name} error {code}: {detail}") from e
+            wait = float(headers.get("retry-after", HTTP_BACKOFF * 2**attempt))
             time.sleep(min(wait, MAX_WAIT))
 
 

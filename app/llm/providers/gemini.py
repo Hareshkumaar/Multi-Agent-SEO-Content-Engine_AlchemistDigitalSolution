@@ -1,26 +1,24 @@
-from app.core.config import Settings
-from app.core.constants import LLM_MAX_TOKENS
-from app.llm.providers import http_client
+from functools import lru_cache
 
-URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+from app.core.config import Settings
+from app.core.constants import HTTP_TIMEOUT, LLM_MAX_TOKENS
+from app.llm.providers import invoke_chat
+
+
+@lru_cache(maxsize=4)
+def _chat_model(api_key: str, model: str):
+    from langchain_google_genai import ChatGoogleGenerativeAI
+
+    return ChatGoogleGenerativeAI(
+        model=model,
+        google_api_key=api_key,
+        temperature=0.4,
+        max_output_tokens=LLM_MAX_TOKENS,
+        timeout=HTTP_TIMEOUT,
+        max_retries=0,
+        response_mime_type="application/json",
+    )
 
 
 def complete(system: str, user: str, s: Settings) -> tuple[str, int, int]:
-    r = http_client.post(
-        URL.format(model=s.gemini_model),
-        headers={"x-goog-api-key": s.gemini_api_key},
-        json={
-            "systemInstruction": {"parts": [{"text": system}]},
-            "contents": [{"role": "user", "parts": [{"text": user}]}],
-            "generationConfig": {
-                "responseMimeType": "application/json",
-                "maxOutputTokens": LLM_MAX_TOKENS,
-                "temperature": 0.4,
-            },
-        },
-    )
-    r.raise_for_status()
-    d = r.json()
-    u = d.get("usageMetadata", {})
-    text = "".join(p.get("text", "") for p in d["candidates"][0]["content"]["parts"])
-    return text, u.get("promptTokenCount", 0), u.get("candidatesTokenCount", 0)
+    return invoke_chat(_chat_model(s.gemini_api_key, s.gemini_model), system, user)
