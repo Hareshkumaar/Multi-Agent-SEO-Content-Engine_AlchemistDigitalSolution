@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "components/card.html" import card %}
+{% from "components/icon.html" import icon %}
+{% from "components/seg.html" import seg %}
+{% block title %}New brief · Lede Studio{% endblock %}
+{% block header %}<div class="row" style="justify-content:space-between;gap:12px"><h1 class="h1">New brief</h1><p class="sub">Enter a topic and configure the editorial pipeline.</p></div>{% endblock %}
+{% block content %}
+<div class="bento" data-labels='{{ LABELS|tojson }}'>
+  {% call card("orange", "Brief", "c7") %}
+  <form id="brief-form" class="stack" novalidate>
+    <div><label class="label" for="topic">Topic or keyword <span id="topic-count" class="muted">0</span></label>
+      <input class="field" id="topic" name="topic" minlength="5" required placeholder="best laptops for students under 100000 PKR">
+      <p class="hint" id="topic-hint">Use at least 5 characters.</p></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div><label class="label" for="audience">Audience</label>
+        <input class="field" id="audience" name="audience" value="University students" required></div>
+      <div><label class="label" for="tone">Tone</label>
+        <input class="field" id="tone" name="tone" value="friendly, practical" required></div>
+    </div>
+    <div><span class="label">Language mode</span>
+      <input type="hidden" id="mode" name="mode" value="english">
+      {{ seg("#mode", [("english", "English"), ("bilingual", "English + Roman Urdu")], "english") }}
+    </div>
+    <details>
+      <summary>Add reference URLs (optional)</summary>
+      <div style="margin-top:8px">
+        <textarea class="field" id="urls" name="reference_urls" rows="3" placeholder="https://example.com/source"></textarea>
+      </div>
+    </details>
+  </form>
+  {% endcall %}
+
+  <div class="stack c5">
+    {% call card("blue", "Run the pipeline") %}
+    <p>Four agents run in order and hand off to review.</p>
+    <button class="btn btn--wide" form="brief-form" type="submit" id="generate" style="margin-top:14px">Generate article <span class="btn__dot">{{ icon('arrow') }}</span></button>
+    {% endcall %}
+    {% call card("dark", "Agent progress") %}
+    <ol class="timeline" id="timeline">
+      {% for node in PIPELINE %}
+      <li class="step" data-step="{{ node }}"><span class="step__dot"></span>
+        <div style="flex:1"><div class="step__name">{{ LABELS[node] }}</div><div class="step__note" data-note></div><div class="shimmer"></div></div></li>
+      {% endfor %}
+    </ol>
+    <p class="hint" id="status" role="status" style="margin-top:8px"></p>
+    {% endcall %}
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/js/progress.js?v=3"></script>{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "components/pill.html" import pill %}
+{% from "components/icon.html" import icon %}
+{% block rail %}{% endblock %}
+{% block topbar %}{% endblock %}
+{% block content %}
+<section class="hero">
+  {{ pill("Lede Studio", "yellow") }}
+  <h1>Four AI agents research, outline, write and review your article.</h1>
+  <p class="muted">Enter a topic. A researcher, an outliner, a writer and a critic hand the work along, and one automatic revision fixes what the critic finds. You approve and export.</p>
+  <a class="btn" href="/dashboard">Continue as guest <span class="btn__dot arrow-nudge">{{ icon('arrow') }}</span></a>
+  <div class="row">
+    {{ pill("No sign-up", "ghost") }}{{ pill("Live agent progress", "ghost") }}{{ pill("Export MD, HTML, JSON", "ghost") }}
+  </div>
+</section>
+{% endblock %}

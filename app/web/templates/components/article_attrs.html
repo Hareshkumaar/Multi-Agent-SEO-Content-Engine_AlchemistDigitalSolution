@@ -1,0 +1,1 @@
+{% macro article_attrs(a) %}data-id="{{ a.id }}" data-score="{{ a.quality_score if a.quality_score is not none else '' }}" data-pass="{{ PASS_SCORE }}" data-kw="{{ a.target_keyword or '' }}" data-title-max="{{ TITLE_MAX }}" data-desc-max="{{ DESC_MAX }}" data-min-words="{{ MIN_WORDS }}" data-first-words="{{ FIRST_WORDS }}"{% endmacro %}

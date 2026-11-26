@@ -1,0 +1,15 @@
+{% macro bar_chart(items) %}
+{% set vals = items|map(attribute=1)|list %}
+{% set mx = (vals|max) if vals else 1 %}
+{% set mx = mx or 1 %}
+<div class="chart">
+  {% for label, value, display_text, tooltip in items %}
+  {% set v = ((value or 0) / mx * 100)|round(1) %}
+  <div class="chart__col">
+    <span>{{ display_text }}</span>
+    <div class="chart__track"><i class="chart__bar" style="--v:{{ v }}" title="{{ tooltip }}"></i></div>
+    <span>{{ label }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endmacro %}

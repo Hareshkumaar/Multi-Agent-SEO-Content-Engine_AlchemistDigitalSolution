@@ -1,0 +1,11 @@
+{% from "components/icon.html" import icon %}
+{% macro item(title, sub="", tone="green", icon_name="check", lines=1) %}
+<div class="item">
+  <div class="item__tile{% if tone != 'green' %} item__tile--{{ tone }}{% endif %}">{{ icon(icon_name) }}</div>
+  <div class="item__body">
+    <div class="item__title clamp-{{ lines }}">{{ title }}</div>
+    {% if sub %}<div class="item__sub clamp-{{ lines }}">{{ sub }}</div>{% endif %}
+  </div>
+  {% if caller is defined and caller %}{{ caller() }}{% endif %}
+</div>
+{% endmacro %}

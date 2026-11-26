@@ -1,0 +1,14 @@
+{% from "components/icon.html" import icon %}
+{% from "components/pill.html" import pill %}
+
+{% macro status_button(nxt, cls="") %}
+<button class="btn{% if cls %} {{ cls }}{% endif %}" data-status="{{ nxt }}">{{ ACTION_LABELS[nxt] }} <span class="btn__dot">{{ icon('check') }}</span></button>
+{% endmacro %}
+
+{% macro stepper(a, cls="") %}
+  {% for s in STATUSES %}
+    {% if s == a.status %}{{ pill(s|title, "white") }}
+    {% elif s in ALLOWED.get(a.status, []) %}{{ status_button(s, cls) }}
+    {% else %}{{ pill(s|title, "ghost") }}{% endif %}
+  {% endfor %}
+{% endmacro %}

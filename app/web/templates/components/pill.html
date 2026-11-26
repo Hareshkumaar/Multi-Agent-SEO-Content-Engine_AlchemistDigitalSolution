@@ -1,0 +1,2 @@
+{# tone: "", yellow, white, green, red, ghost #}
+{% macro pill(text, tone="", block=False) %}<span class="pill{% if tone %} pill--{{ tone }}{% endif %}{% if block %} pill--block{% endif %}">{{ text }}</span>{% endmacro %}

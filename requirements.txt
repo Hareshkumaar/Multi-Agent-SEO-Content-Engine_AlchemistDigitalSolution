@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+langgraph
+pydantic>=2
+pydantic-settings
+supabase
+python-dotenv
+markdown
+jinja2
+httpx
+pytest

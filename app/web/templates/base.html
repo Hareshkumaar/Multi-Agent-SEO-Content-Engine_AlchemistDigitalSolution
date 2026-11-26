@@ -1,0 +1,50 @@
+{% from "components/icon.html" import icon %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Lede Studio{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Manrope:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css?v=9">
+</head>
+<body>
+<div class="shell">
+  {% block rail %}
+  {% set path = request.url.path %}
+  <nav class="rail" aria-label="Main">
+    <a class="rail__logo" href="/" aria-label="Lede Studio home">L</a>
+    <div class="rail__nav">
+      <a class="rail__link {{ 'is-active' if path == '/' }}" href="/" aria-label="Welcome">{{ icon('home') }}</a>
+      <a class="rail__link {{ 'is-active' if path == '/dashboard' }}" href="/dashboard" aria-label="New brief">{{ icon('plus') }}</a>
+    </div>
+  </nav>
+  {% endblock %}
+  <main class="main">
+    <div class="page">
+      {% block topbar %}
+      <header class="topbar">
+        <div class="row" style="gap:12px">
+          <span class="rail__logo" style="width:40px;height:40px;background:var(--blue);color:var(--ink)">G</span>
+          <div><div class="sub" style="font-size:.75rem;line-height:1.2">Hello there!</div><div style="font-weight:800;line-height:1.2">Guest editor</div></div>
+        </div>
+        <span style="flex:1"></span>
+        <span class="pill pill--yellow">Guest mode</span>
+        <div class="notif-wrap">
+          <button type="button" class="rail__link" id="bell" aria-label="Recent articles" aria-expanded="false" style="background:var(--dark);border:0;cursor:pointer">{{ icon('bell') }}</button>
+          <div class="notif-menu card" id="notif-menu" hidden></div>
+        </div>
+      </header>
+      {% endblock %}
+      {% block header %}{% endblock %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script src="/js/api.js?v=4"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

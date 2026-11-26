@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% from "components/card.html" import card %}
+{% from "components/pill.html" import pill %}
+{% from "components/progress_bar.html" import progress_bar %}
+{% from "components/icon.html" import icon %}
+{% from "components/status.html" import status_button %}
+{% from "components/article_attrs.html" import article_attrs %}
+{% from "components/stat.html" import stat %}
+{% from "components/item.html" import item %}
+{% from "components/chart.html" import bar_chart %}
+{% set brief = a.research_brief_json or {} %}
+{% set checks = report.code_checks or {} %}
+{% set total_ms = a.agent_runs|sum(attribute='latency_ms') %}
+{% set fb = report.feedback or [] %}
+{% set chart_items = [] %}
+{% for r in a.agent_runs %}{% set _ = chart_items.append((r.agent_name.replace("_", " ")|title, r.latency_ms, "%.1fs"|format(r.latency_ms / 1000), "%s in / %s out tokens"|format(r.input_tokens, r.output_tokens))) %}{% endfor %}
+{% block title %}{{ a.topic }}{% endblock %}
+{% block header %}
+<div class="row" style="justify-content:space-between;gap:12px">
+  <h1 class="h1 clamp-1">{{ a.topic }}</h1>
+  {{ pill(a.status|title, "white") }}
+</div>
+{% endblock %}
+{% block content %}
+<div id="article" class="stack" {{ article_attrs(a) }}>
+
+  <div class="stats">
+    {{ stat(a.quality_score if a.quality_score is not none else "-", "Critic score", "blue") }}
+    {{ stat(checks.get("word_count", "-"), "words", "orange") }}
+    {{ stat(a.search_intent or "-", "search intent", "yellow") }}
+    {{ stat("%.1fs"|format(total_ms / 1000), "pipeline time", "green") }}
+  </div>
+
+  <div class="bento">
+    {% call card("white", "", "c4") %}
+    <div class="row" style="justify-content:space-between;margin-bottom:12px">
+      <h2 class="card__title" style="margin:0">Rubric</h2>
+      {{ pill("Passed" if a.quality_score is not none and a.quality_score >= PASS_SCORE else "Needs work", "dark") }}
+    </div>
+    <div class="stack">{% for k in RUBRIC %}{{ progress_bar(k.replace("_", " ")|title, report.get(k, 0)) }}{% endfor %}</div>
+    {% endcall %}
+
+    {% call card("dark", "Critic feedback", "c5") %}
+    <div class="stack">
+      {% for f in fb[:3] %}
+      {{ item(f.issue, f.fix, "red" if f.severity == "high" else "yellow" if f.severity == "medium" else "blue", "alert", 1) }}
+      {% else %}<p class="muted">No open feedback.</p>{% endfor %}
+      {% if fb|length > 3 %}
+      <details><summary>Show {{ fb|length - 3 }} more</summary>
+        <div class="stack" style="margin-top:8px">
+          {% for f in fb[3:] %}{{ item(f.issue, f.fix, "red" if f.severity == "high" else "yellow" if f.severity == "medium" else "blue", "alert", 2) }}{% endfor %}
+        </div>
+      </details>
+      {% endif %}
+    </div>
+    {% endcall %}
+
+    {% call card("orange", "Next step", "c3") %}
+    <div class="stack">
+      {% if a.quality_score is not none and a.quality_score < PASS_SCORE %}<p>Below {{ PASS_SCORE }}. Fix feedback in the editor before approving.</p>
+      {% else %}<p>Passed the quality bar. Edit or approve when ready.</p>{% endif %}
+      <a class="btn btn--wide" href="/articles/{{ a.id }}/edit">Edit article <span class="btn__dot">{{ icon('arrow') }}</span></a>
+      {% if a.status == "draft" %}{{ status_button("approved", "btn--dark btn--wide") }}{% endif %}
+    </div>
+    {% endcall %}
+  </div>
+
+  <div class="bento">
+    {% call card("white", "Agent latency", "c4") %}
+    {{ bar_chart(chart_items) }}
+    {% endcall %}
+
+    {% call card("dark", "SEO metadata", "c4") %}
+    <div class="stack">
+      <div class="row">{{ pill(a.target_keyword or "no keyword", "ghost") }}{{ pill(a.search_intent or "no intent", "ghost") }}</div>
+      {{ item(a.meta_title or "-", "Meta title", "blue", "edit", 2) }}
+      <p class="sub clamp-3">{{ a.meta_description or '-' }}</p>
+    </div>
+    {% endcall %}
+
+    {% call card("dark", "Research brief", "c4") %}
+    <div class="stack">
+      <p class="sub clamp-2">{{ brief.intent_reason or '-' }}</p>
+      <div class="row">{% for k in (brief.secondary_keywords or [])[:4] %}{{ pill(k) }}{% endfor %}</div>
+      <details><summary>Facts the writer may use</summary>
+        <ul style="margin-top:8px;padding-left:18px">{% for f in brief.facts or [] %}<li>{{ f.statement }} <span class="muted">({{ f.source.replace("_", " ") }})</span></li>{% endfor %}</ul>
+      </details>
+    </div>
+    {% endcall %}
+  </div>
+
+</div>
+{% endblock %}
+{% block scripts %}<script src="/js/status.js?v=3"></script>{% endblock %}

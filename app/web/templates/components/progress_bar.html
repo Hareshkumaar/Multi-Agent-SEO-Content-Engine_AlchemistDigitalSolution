@@ -1,0 +1,7 @@
+{% macro progress_bar(label, value, max=100, note="", sub="") %}
+<div class="bar-row">
+  <div class="bar-row__head"><span>{{ label }}</span><span>{{ note or value }}</span></div>
+  <div class="bar" role="progressbar" aria-valuenow="{{ value }}" aria-valuemax="{{ max }}"><i style="--v: {{ ((value or 0) / max * 100)|round(1) if max else 0 }}"></i></div>
+  {% if sub %}<div class="bar-row__sub">{{ sub }}</div>{% endif %}
+</div>
+{% endmacro %}

@@ -1,0 +1,7 @@
+{% macro seg(target, options, active) %}
+<div class="seg" data-target="{{ target }}">
+  {% for val, label in options %}
+  <button type="button" class="seg__btn{% if val == active %} is-active{% endif %}" data-value="{{ val }}">{{ label }}</button>
+  {% endfor %}
+</div>
+{% endmacro %}

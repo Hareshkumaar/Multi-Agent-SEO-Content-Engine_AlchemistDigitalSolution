@@ -1,0 +1,7 @@
+{# Usage: {% call card("orange", "Title", "c7") %}...{% endcall %} #}
+{% macro card(color="dark", title="", span="") %}
+<section class="card card--{{ color }} {{ span }}">
+  {% if title %}<h2 class="card__title">{{ title }}</h2>{% endif %}
+  {{ caller() }}
+</section>
+{% endmacro %}
