@@ -8,14 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Manrope:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="/css/tokens.css?v=10">
+  <link rel="stylesheet" href="/css/tokens.css?v=11">
 </head>
 <body>
 <div class="shell">
   {% block rail %}
   {% set path = request.url.path %}
   <nav class="rail" aria-label="Main">
-    <a class="rail__logo" href="/" aria-label="Lede Studio home">L</a>
+    <a class="rail__logo" href="/" aria-label="Lede Studio home">{{ icon('spark') }}</a>
     <div class="rail__nav">
       <a class="rail__link {{ 'is-active' if path == '/' }}" href="/" aria-label="Welcome">{{ icon('home') }}</a>
       <a class="rail__link {{ 'is-active' if path == '/dashboard' }}" href="/dashboard" aria-label="New brief">{{ icon('plus') }}</a>

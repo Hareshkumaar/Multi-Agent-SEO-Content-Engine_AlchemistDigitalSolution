@@ -150,4 +150,14 @@ details > summary { cursor: pointer; font-weight: 800; list-style: none; }
 dialog.modal { border: 1px solid var(--inner2); color: var(--white); max-width: 420px; width: calc(100% - 32px); padding: 20px; box-shadow: 0 24px 60px rgba(0, 0, 0, .6); }
 dialog.modal::backdrop { background: rgba(0, 0, 0, .65); backdrop-filter: blur(4px); }
 dialog.modal .btn { padding: 8px 18px; }
+.landing { display: grid; grid-template-columns: 1.08fr 1fr; gap: 40px; align-items: center; margin: auto 0; }
+.landing__title { font-size: clamp(2.2rem, 4.4vw, 3.3rem); font-weight: 800; line-height: 1.06; letter-spacing: -.02em; }
+.landing__cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+.landing__cards .card--white { grid-column: 1 / -1; }
+.step-pill { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, .28); background: rgba(255, 255, 255, .1); }
+.step-pill__dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, .75); display: grid; place-items: center; flex: none; }
+.step-pill__dot.is-solid { background: var(--white); color: var(--orange); border-color: var(--white); }
+.step-pill__dot .icon { width: 12px; height: 12px; }
+.badge-ring { width: 46px; height: 46px; border-radius: 50%; border: 3px solid var(--orange); display: grid; place-items: center; font-weight: 800; font-size: .85rem; flex: none; }
+@media (max-width: 900px) { .landing { grid-template-columns: 1fr; } .landing__cards { grid-template-columns: 1fr; } }
 @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } }

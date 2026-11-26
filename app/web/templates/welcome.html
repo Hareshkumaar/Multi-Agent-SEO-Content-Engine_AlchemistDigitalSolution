@@ -1,16 +1,73 @@
 {% extends "base.html" %}
+{% from "components/card.html" import card %}
 {% from "components/pill.html" import pill %}
 {% from "components/icon.html" import icon %}
 {% block rail %}{% endblock %}
-{% block topbar %}{% endblock %}
+{% block topbar %}
+<header class="topbar" style="padding-top:6px">
+  <a class="row" href="/" style="gap:10px">
+    <span class="rail__logo" style="width:36px;height:36px">{{ icon('spark') }}</span>
+    <span style="font-weight:800;font-size:1.05rem">Lede Studio</span>
+  </a>
+  <span style="flex:1"></span>
+  <a class="pill" href="/dashboard">Guest mode</a>
+  <a class="pill pill--ghost" href="/dashboard">Open studio</a>
+</header>
+{% endblock %}
 {% block content %}
-<section class="hero">
-  {{ pill("Lede Studio", "yellow") }}
-  <h1>Four AI agents research, outline, write and review your article.</h1>
-  <p class="muted">Enter a topic. A researcher, an outliner, a writer and a critic hand the work along, and one automatic revision fixes what the critic finds. You approve and export.</p>
-  <a class="btn" href="/dashboard">Continue as guest <span class="btn__dot arrow-nudge">{{ icon('arrow') }}</span></a>
-  <div class="row">
-    {{ pill("No sign-up", "ghost") }}{{ pill("Live agent progress", "ghost") }}{{ pill("Export MD, HTML, JSON", "ghost") }}
+<section class="landing">
+  <div class="stack" style="gap:18px">
+    <h1 class="landing__title">Research, write.<br>Rank better.</h1>
+    <p class="sub" style="max-width:440px">Four specialised AI agents research, outline, write and critique your SEO article—with one automatic revision pass before you approve and export.</p>
+    <div class="row" style="gap:12px">
+      <a class="btn" href="/dashboard">Continue as guest <span class="btn__dot arrow-nudge">{{ icon('arrow') }}</span></a>
+      <a class="pill pill--ghost" href="/dashboard" style="padding:14px 20px">New brief</a>
+    </div>
+    <div class="row">
+      <span class="pill">{{ icon('check') }} No sign-up</span>
+      <span class="pill">{{ icon('check') }} Live agent progress</span>
+      <span class="pill">{{ icon('check') }} Export MD, HTML, JSON</span>
+    </div>
+  </div>
+
+  <div class="landing__cards">
+    {% call card("orange", "4-Agent Pipeline") %}
+    <div class="stack" style="gap:8px">
+      <div class="step-pill">
+        <span class="step-pill__dot is-solid">{{ icon('check') }}</span>
+        <div><div style="font-weight:800;font-size:.82rem;line-height:1.2">1. Researcher</div><div style="font-size:.72rem;opacity:.85">SERP intent &amp; facts</div></div>
+      </div>
+      <div class="step-pill">
+        <span class="step-pill__dot"></span>
+        <div><div style="font-weight:800;font-size:.82rem;line-height:1.2">2. Outliner</div><div style="font-size:.72rem;opacity:.85">H1–H3, meta &amp; FAQs</div></div>
+      </div>
+      <div class="step-pill">
+        <span class="step-pill__dot"></span>
+        <div><div style="font-weight:800;font-size:.82rem;line-height:1.2">3. Writer &amp; Critic</div><div style="font-size:.72rem;opacity:.85">1,000+ words, 80+ score</div></div>
+      </div>
+    </div>
+    {% endcall %}
+
+    {% call card("blue") %}
+    <div class="stack" style="height:100%;justify-content:space-between;gap:14px">
+      <div class="stack" style="gap:6px">
+        <span style="font-size:.78rem;opacity:.75">Every article</span>
+        <h2 style="font-size:1.35rem;font-weight:800;line-height:1.15">Start a new SEO brief</h2>
+      </div>
+      <a class="btn btn--wide" href="/dashboard">Start <span class="btn__dot">{{ icon('arrow') }}</span></a>
+    </div>
+    {% endcall %}
+
+    {% call card("white") %}
+    <div class="row" style="gap:14px">
+      <div class="item__tile" style="background:var(--orange);color:var(--white);width:42px;height:42px">{{ icon('file') }}</div>
+      <div class="item__body">
+        <div style="font-weight:800;font-size:.95rem">Critic quality gate</div>
+        <div style="font-size:.78rem;color:#555">Score below 80 triggers 1 auto-revision pass.</div>
+      </div>
+      <div class="badge-ring">80+</div>
+    </div>
+    {% endcall %}
   </div>
 </section>
 {% endblock %}
