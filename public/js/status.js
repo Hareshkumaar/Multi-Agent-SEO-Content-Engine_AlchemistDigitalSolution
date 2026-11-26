@@ -1,4 +1,6 @@
 // Status transition buttons on Review and Editor pages.
+if (innerWidth <= 640) $$('.card-fold').forEach((d) => (d.open = false));
+
 function confirmApprove(low, pass) {
   const dlg = $('#confirm-dialog');
   if (!dlg) return Promise.resolve(true);

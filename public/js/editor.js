@@ -42,3 +42,7 @@ window.saveEdits = save;
 $('#save').addEventListener('click', async () => {
   try { await save(); toast('Saved'); } catch (e) { toast(e.message); }
 });
+
+$$('.editor-tabs .seg__btn').forEach((b) =>
+  b.addEventListener('click', () => $('.editor').classList.toggle('is-preview', b.dataset.pane === 'preview'))
+);

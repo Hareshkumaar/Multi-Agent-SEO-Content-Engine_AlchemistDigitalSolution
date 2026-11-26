@@ -21,3 +21,9 @@ def get_db() -> "Client":
                 s = get_settings()
                 _db = create_client(s.supabase_url, s.supabase_service_key)
     return _db
+
+
+def reset_db() -> None:
+    global _db
+    with _lock:
+        _db = None

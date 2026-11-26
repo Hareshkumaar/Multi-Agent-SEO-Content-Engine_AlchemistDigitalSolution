@@ -40,6 +40,11 @@ def _try(name: str, system: str, user: str, settings, attempts: int):
         except Exception as e:
             if isinstance(e, (httpx.TimeoutException, TimeoutError)) or type(e).__name__ == "APITimeoutError":
                 raise LLMError(f"{name} timed out") from e
+            if isinstance(e, httpx.TransportError) or type(e).__name__ == "APIConnectionError":
+                if attempt == attempts - 1:
+                    raise LLMError(f"{name} connection error: {str(e)[:200]}") from e
+                time.sleep(min(HTTP_BACKOFF * 2**attempt, MAX_WAIT))
+                continue
             info = _status_info(e)
             if not info:
                 raise

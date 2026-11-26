@@ -3,7 +3,7 @@ import httpx
 
 from app.core.constants import HTTP_TIMEOUT
 
-http_client = httpx.Client(timeout=HTTP_TIMEOUT)
+http_client = httpx.Client(timeout=HTTP_TIMEOUT, limits=httpx.Limits(keepalive_expiry=2.0))
 
 
 def invoke_chat(llm, system: str, user: str) -> tuple[str, int, int]:
