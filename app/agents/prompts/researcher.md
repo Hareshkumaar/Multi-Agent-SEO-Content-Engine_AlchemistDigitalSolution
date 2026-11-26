@@ -14,5 +14,5 @@ Produce a research brief:
 3. primary_keyword: the natural search phrase for this topic, normal capitalization for proper nouns such as Pakistan, 2 to 6 words. The article will repeat it exactly, so keep it short and readable.
 4. secondary_keywords: 3 to 6 related phrases.
 5. key_angles: 4 to 6 angles this audience cares about.
-6. facts: at least 5 factual statements the writer may use. Mark source as reference_url only when the fact comes from the reference material, otherwise general_knowledge. Never invent statistics, prices, dates, names or quotes. If you are unsure of a number, state the fact in general terms.
+6. facts: 7 to 10 distinct, concrete factual statements the writer may use (covering steps, requirements, tools, pitfalls, and context). Mark source as reference_url only when the fact comes from the reference material, otherwise general_knowledge. Never invent statistics, prices, dates, names or quotes. If you are unsure of a number, state the fact in general terms.
 7. audience_notes: what this audience already knows and what they need.

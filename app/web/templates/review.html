@@ -37,7 +37,7 @@
       <h2 class="card__title" style="margin:0">Rubric</h2>
       {{ pill("Passed" if a.quality_score is not none and a.quality_score >= PASS_SCORE else "Needs work", "dark") }}
     </div>
-    <div class="stack">{% for k in RUBRIC %}{{ progress_bar(k.replace("_", " ")|title, report.get(k, 0)) }}{% endfor %}</div>
+    <div class="stack">{% for k in RUBRIC %}{{ progress_bar("Zero Fluff" if k == "fluff" else k.replace("_", " ")|title, report.get(k, 0)) }}{% endfor %}</div>
     {% endcall %}
 
     {% call card("dark", "Critic feedback", "c5") %}

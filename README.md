@@ -26,7 +26,7 @@ flowchart LR
 
 **Trust rule:** the LLM does judgment. Python computes everything checkable (word count, keyword in H1 and first 100 words, character limits). If a hard check fails the final score is capped at 79, which triggers the revision. Each agent output is validated by Pydantic with up to 2 retries that include the error message.
 
-Every agent step writes one row to `agent_runs` (tokens, latency). Each LLM call goes through one function in `app/llm/client.py` and one `BaseAgent` class runs all four agents.
+Every agent step writes one row to `agent_runs` (tokens, latency). LangGraph orchestrates the 4-stage pipeline and Critic loop, while LangChain (`ChatPromptTemplate`, `ChatGroq`, `ChatGoogleGenerativeAI`) powers prompt formatting and provider calls through `app/llm/client.py` and `BaseAgent`.
 
 ## Setup
 
@@ -114,7 +114,7 @@ public/                 tokens.css (design tokens) and 4 small JS files
 docs/screenshots/       App UI screenshots (Welcome, Generate, Review, Editor)
 sql/schema.sql          Supabase schema
 app/core/               config.py (env) and constants.py (all limits and names)
-app/llm/                client.py, validated.py, providers/ (groq, gemini)
+app/llm/                client.py, validated.py, providers/ (LangChain ChatGroq, ChatGoogleGenerativeAI)
 app/agents/             base.py, 4 agents, prompts/*.md
 app/schemas/            Pydantic models
 app/pipeline/           state, routing, LangGraph graph
@@ -160,4 +160,4 @@ Observed from a real run (`articles.id = 16`, total pipeline time `16.9s`, `1,38
 
 - Reference URL fetching is basic text extraction. A hardened fetcher would block private network addresses.
 - Guest mode has no authentication, so anyone with the link is an editor.
-- Possible additions: articles list page, analytics from `agent_runs`, topic suggestions.
+- Possible additions: dedicated articles archive page, analytics from `agent_runs`, topic suggestions.
